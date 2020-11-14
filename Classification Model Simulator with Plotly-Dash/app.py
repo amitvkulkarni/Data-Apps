@@ -123,7 +123,7 @@ app.layout = html.Div(
                         html.A(
                             
                             html.Button("Code", id="learn-more-button"),
-                            href="https://github.com/amitvkulkarni",
+                            href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Classification%20Model%20Simulator%20with%20Plotly-Dash",
                         )
                     ],
                     className="one-third column",
