@@ -9,32 +9,45 @@ import math
 import pandas as pd
 import numpy as np
 import datetime as dt
+import base64
+import io
+import os
+import base64
 import seaborn as sn
 import matplotlib as plt
 import pandas as pd
-from datetime import datetime
 import dash_daq as daq
 import plotly.express as px
+from urllib.parse import quote as urlquote
+from flask import Flask, send_from_directory
 from dash.dependencies import Input, Output, State, ClientsideFunction
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_daq as daq
-from fileUpload import *
+#from fileUpload import *
 from models import *
 from defintion import *
-#from toasts import *
+from multiModel import *
+
 
 
 # df = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Train.csv')
 # df_dummies = pd.get_dummies(df,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
+
+df_train = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Train.csv')
+df_test = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Test.csv')
+df_train_dummies = pd.get_dummies(df_train,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
+df_test_dummies = pd.get_dummies(df_train,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
 
 models = ['Logistic', 'Random Forest', 'GBM','KNN','XGBoost','Catboost','GNB']
 FONTSIZE = 20
 FONTCOLOR = "#F5FFFA"
 BGCOLOR ="#3445DB"
 
-fig_featureImp = featureImportnace()
+
+
+obj_feature = features()
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
@@ -66,6 +79,84 @@ toast_model = html.Div(
         ),
     ]
 )
+
+""" toast_fileUpload = html.Div(
+    [     
+        dbc.Toast(
+            html.Div([
+                html.Div('Files uploading completed', style={'color': 'green', 'fontSize': 18}),
+            ], style={'marginBottom': 50, 'marginTop': 25}),    
+            id="output-data-upload",
+            duration=4000,
+            style={"position": "fixed", "top": 30, "right": 1, "width": 350},
+        ),
+    ]
+) """
+
+upload_layout = html.Div([
+    dcc.Upload(
+        id='upload-data',
+        children=html.Div([
+            'Drag and Drop or ',
+            html.A('Select Files')
+        ]),
+        style={
+            'width': '100%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        },
+        # Allow multiple files to be uploaded
+        multiple=True
+    ),
+    html.Div(id='output-data-upload'),
+    
+    
+])
+
+
+
+def parse_contents(contents, filename, date):
+    content_type, content_string = contents.split(',')
+
+    decoded = base64.b64decode(content_string)
+    try:
+        if 'csv' in filename:
+            # Assume that the user uploaded a CSV file
+            df = pd.read_csv(
+                io.StringIO(decoded.decode('utf-8')))
+        elif 'xls' in filename:
+            # Assume that the user uploaded an excel file
+            df = pd.read_excel(io.BytesIO(decoded))
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])
+
+    return html.Div([
+        html.H5(filename),
+        html.H6(dt.datetime.fromtimestamp(date)),
+
+        dash_table.DataTable(
+            data=df.to_dict('records'),
+            columns=[{'name': i, 'id': i} for i in df.columns]
+        ),
+
+        html.Hr(),  # horizontal line
+
+        # For debugging, display the raw contents provided by the web browser
+        html.Div('Raw Content'),
+        html.Pre(contents[0:200] + '...', style={
+            'whiteSpace': 'pre-wrap',
+            'wordBreak': 'break-all'
+        })
+    ])
+
 
 
 PAGE_SIZE = 10
@@ -120,6 +211,7 @@ app.layout = html.Div(
                     [
                         toast_datasplit,
                         toast_model,
+
                         html.A(
                             
                             html.Button("Code", id="learn-more-button"),
@@ -199,6 +291,9 @@ app.layout = html.Div(
                             className="dcc_control",
 
                         ),
+                        html.Div(
+                            id = 'best-model', style={'color': 'grey', 'fontSize': 15} 
+                        )
                       
                     ],
                     className="pretty_container four columns",
@@ -217,7 +312,7 @@ app.layout = html.Div(
                                 color = FONTCOLOR,
                                 backgroundColor=BGCOLOR
                             )
-                        ),
+                        ),html.Br(),
                         html.Div(
                             [
                                 html.Div(
@@ -244,7 +339,7 @@ app.layout = html.Div(
                                 )
                             ]
                         ),
-
+                        html.Br(),
                         html.Div([
                             html.Div(
                                 [
@@ -280,7 +375,7 @@ app.layout = html.Div(
                         ]
 
                         ),
-      
+                        html.Br(),
                         html.Div(
                             [
                                 html.Div(
@@ -312,6 +407,7 @@ app.layout = html.Div(
                                             color = FONTCOLOR,
                                             backgroundColor=BGCOLOR
                                         ),   
+                                        
                                     ],className="row flex-display",
                                 )
   
@@ -329,33 +425,31 @@ app.layout = html.Div(
                             [
                                 html.Div(
                                     [dcc.Graph(id="main_graph")],
-                                    className="pretty_container seven columns",
+                                    className="pretty_container six columns",
                                 ),
                                 html.Div(
                                     [dcc.Graph(id="aggregate_graph")],
-                                    className="pretty_container eight columns",
-                                ),                          
+                                    className="pretty_container six columns",
+                                ),                         
 
                             ],
                             className="row flex-display",
                         ),
+
                         html.Div(
-                            [                                       
-                                daq.GraduatedBar(
-                                    id='model-graduated-bar',
-                                    label="Model Performance",
-                                    max = 100,
-                                    color={"ranges":{"green":[70,100],"yellow":[50,70],"red":[0,50]}},
-                                    showCurrentValue=True,
-                                    value=50
-                                ) 
+                            [     
+                                html.Div(
+                                    [dcc.Graph(id="pie_graph", figure = corelationMatrix())],
+                                    className="pretty_container six columns",
+                                ),                                  
+                                html.Div(
+                                    [dcc.Graph(id="aggregate_graph1", figure = obj_feature.featureImportance)],
+                                    className="pretty_container six columns",
+                                ),
                             ],
                         ),
-                        html.Div(
-                            [
-                                html.Div(id='my-output', style={'color': 'blue', 'fontSize': 15}),
-                            ],className="pretty_container twelve columns",
-                        ),
+
+                        
                     ],
                     id="right-column",
                     className="eight columns",
@@ -367,17 +461,35 @@ app.layout = html.Div(
          html.Div(
             [
                 html.Div(
-                    [dcc.Graph(id="pie_graph", figure = corelationMatrix())],
-                    className="pretty_container four columns",
-                ),
+                        [dcc.Graph(id="model-graphs", figure={})],
+                        className="pretty_container seven columns",
+                ), 
                 html.Div(
                     [dcc.Graph(id="individual_graph")],
                     className="pretty_container seven columns",
                 ),
                 html.Div(
-                    [dcc.Graph(id="aggregate_graph1", figure = fig_featureImp)],
-                    className="pretty_container four columns",
+                    [
+                        daq.GraduatedBar(
+                            id='model-graduated-bar',
+                            label="Model Performance",
+                            max = 100,
+                            color={"ranges":{"green":[70,100],"yellow":[50,70],"red":[0,50]}},
+                            showCurrentValue=True,
+                            value=50
+                        ) ,   
+                        html.Div(
+                            #[
+                                html.Div(
+                                    id='my-output', style={'color': 'blue', 'fontSize': 15}                     
+                                )
+                            
+                            #],className="pretty_container six columns",
+                        )
+                    ],className="pretty_container six columns",
                 ),
+
+            
             ],
             className="row flex-display",
         ),
@@ -402,11 +514,14 @@ app.layout = html.Div(
                 page_size= 10,
             )
         ),
+        # html.Div(
+        #             [dcc.Graph(id="model-graphs", figure={})],
+        #             className="pretty_container four columns",
+        #         ),
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
-
 
 # @app.callback(
 #     [
@@ -493,6 +608,14 @@ def open_toast_model(target, independent, slider):
     else:
         return False
 
+""" @app.callback(
+    Output('output-data-upload', 'is_open'),
+    [Input('upload-data', 'value')]
+)
+def open_toast_fileUpload(value):
+    return True """
+
+
 @app.callback(
     dash.dependencies.Output('model-graduated-bar', 'value'),
     [
@@ -513,7 +636,40 @@ def update_graduatedBar(target, independent, slider):
     
 )
 def update_graduatedBar(value):
-    return "The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  | The factors considered  |  "
+    return "The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation"
+
+
+@app.callback(Output('output-data-upload', 'children'),
+              [Input('upload-data', 'contents')],
+              [State('upload-data', 'filename'),
+               State('upload-data', 'last_modified')])
+def update_output(list_of_contents, list_of_names, list_of_dates):
+    if list_of_contents is not None:
+        children = [
+            parse_contents(c, n, d) for c, n, d in
+            zip(list_of_contents, list_of_names, list_of_dates)]
+        return children
+        
+
+
+@app.callback(
+    [
+        Output("model-graphs", 'figure'),     
+        Output("best-model", 'children'),  
+        
+           
+    ],
+    [
+        Input("select_target", "value"),
+        Input("select_independent", "value"),
+        Input("slider", "value")
+    ]
+)
+def measurePerformance(target, independent, slider):
+    fig_model = getModels(target,independent, slider)
+    return fig_model, 'The best performing model is GLM'
+
+
 
 
 
