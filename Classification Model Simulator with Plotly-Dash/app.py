@@ -31,23 +31,14 @@ from defintion import *
 from multiModel import *
 
 
-
-# df = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Train.csv')
-# df_dummies = pd.get_dummies(df,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
-
-df_train = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Train.csv')
-df_test = pd.read_csv('C:/Users/kulkarna4029/OneDrive - ARCADIS/Studies/Python/Plotly_Dash/Clustering_algos/data/Test.csv')
-df_train_dummies = pd.get_dummies(df_train,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
-df_test_dummies = pd.get_dummies(df_train,columns=['Gender','Married','Education','Self_Employed','Property_Area'],drop_first=True)
-
 models = ['Logistic', 'Random Forest', 'GBM','KNN','XGBoost','Catboost','GNB']
 FONTSIZE = 20
 FONTCOLOR = "#F5FFFA"
 BGCOLOR ="#3445DB"
 
 
+#obj_feature = features()
 
-obj_feature = features()
 
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
@@ -268,7 +259,7 @@ app.layout = html.Div(
                         html.P("Select Target", className="control_label"),
                         dcc.Dropdown(
                             id="select_target",
-                            options=[{'label':x, 'value':x} for x in df_dummies.columns],
+                            options=[{'label':x, 'value':x} for x in obj_Data.df_train_dummies.columns],
                             multi=True,
                             value='Loan_Status',
                             clearable=False,
@@ -277,8 +268,8 @@ app.layout = html.Div(
                          html.P("Select Variables", className="control_label"),
                         dcc.Dropdown(
                             id="select_independent",
-                            options=[{'label':x, 'value':x} for x in df_dummies.columns],
-                            value= list(df_dummies.columns),
+                            options=[{'label':x, 'value':x} for x in obj_Data.df_train_dummies.columns],
+                            value= list(obj_Data.df_train_dummies.columns),
                             multi=True,
                             className="dcc_control",
                         ),
@@ -443,13 +434,11 @@ app.layout = html.Div(
                                     className="pretty_container six columns",
                                 ),                                  
                                 html.Div(
-                                    [dcc.Graph(id="aggregate_graph1", figure = obj_feature.featureImportance)],
+                                    [dcc.Graph(id="aggregate_graph1", figure = featureImportance())],
                                     className="pretty_container six columns",
                                 ),
                             ],
-                        ),
-
-                        
+                        ),                        
                     ],
                     id="right-column",
                     className="eight columns",
@@ -514,30 +503,10 @@ app.layout = html.Div(
                 page_size= 10,
             )
         ),
-        # html.Div(
-        #             [dcc.Graph(id="model-graphs", figure={})],
-        #             className="pretty_container four columns",
-        #         ),
     ],
     id="mainContainer",
     style={"display": "flex", "flex-direction": "column"},
 )
-
-# @app.callback(
-#     [
-#         Output("records", "children"),        
-#         Output("variables", "children"),
-#         Output("numeric", "children"),
-#         Output("categorical", "children")
-#        # Output("describe", "children"),
-#     ],
-#     [Input("aggregate_data", "data")]
-# )
-# def update_text(data):
-#     numeric_var = len([i for i in list(df.columns) if df.dtypes[i] in ['float64','int64']])
-#     cat_features = len([i for i in list(df.columns) if df.dtypes[i] in ['float64']])
-#     return str(df.shape[0]) + " Records", str(df.shape[1]) + " Variables", str(numeric_var) + " Numeric", str(cat_features) + " Categorical"
-
 
 @app.callback(
     [
@@ -550,9 +519,9 @@ app.layout = html.Div(
     Input("aggregate_data", "data")
 )
 def update_text(data):
-    numeric_var = len([i for i in list(df.columns) if df.dtypes[i] in ['float64','int64']])
-    cat_features = len([i for i in list(df.columns) if df.dtypes[i] in ['float64']])
-    return str(df.shape[0]), str(df.shape[1]), str(numeric_var), str(cat_features)
+    numeric_var = len([i for i in list(obj_Data.df.columns) if obj_Data.df.dtypes[i] in ['float64','int64']])
+    cat_features = len([i for i in list(obj_Data.df.columns) if obj_Data.df.dtypes[i] in ['float64']])
+    return str(obj_Data.df.shape[0]), str(obj_Data.df.shape[1]), str(numeric_var), str(cat_features)
 
 
 @app.callback(
@@ -574,17 +543,9 @@ def update_text(data):
     ]
 )
 def variableSelection(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = glm(target,independent, slider)
+    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
     #return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider),'Precision:{}'.format(precision),'Recall: {}'.format(recall),'Accuracy: {}'.format(accuracy)
     return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider), precision, recall, accuracy,trainX,testX 
-
-# @app.callback(
-#     dash.dependencies.Output('my-LED-display', 'value'),
-#     [dash.dependencies.Input('slider', 'value')]
-# )
-# def update_output(value):
-#     return str(value)
-
 
 @app.callback(
     Output('auto-toast', 'is_open'),
@@ -602,19 +563,11 @@ def open_toast(value):
     ]
 )
 def open_toast_model(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = glm(target,independent, slider)
+    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
     if auc < 0.7:
         return True
     else:
         return False
-
-""" @app.callback(
-    Output('output-data-upload', 'is_open'),
-    [Input('upload-data', 'value')]
-)
-def open_toast_fileUpload(value):
-    return True """
-
 
 @app.callback(
     dash.dependencies.Output('model-graduated-bar', 'value'),
@@ -625,7 +578,7 @@ def open_toast_fileUpload(value):
     ]
 )
 def update_graduatedBar(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = glm(target,independent, slider)
+    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
     return auc*100
 
 
@@ -668,10 +621,6 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 def measurePerformance(target, independent, slider):
     fig_model = getModels(target,independent, slider)
     return fig_model, 'The best performing model is GLM'
-
-
-
-
 
 
 if __name__ == '__main__':
