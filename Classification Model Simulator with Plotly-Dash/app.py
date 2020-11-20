@@ -28,21 +28,21 @@ import dash_daq as daq
 #from fileUpload import *
 from models import *
 from defintion import *
-from multiModel import *
+from multiModel import multiModel
 
 
-models = ['Logistic', 'Random Forest', 'GBM','KNN','XGBoost','Catboost','GNB']
+
+models = ['LGBM', 'Random Forest', 'KNN', 'GNB', 'DT', 'ADABoost','Logistic']
 FONTSIZE = 20
 FONTCOLOR = "#F5FFFA"
 BGCOLOR ="#3445DB"
 
 
-#obj_feature = features()
-
-
 app = dash.Dash(
     __name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}]
 )
+
+
 server = app.server
 
 toast_datasplit = html.Div(
@@ -83,6 +83,7 @@ toast_model = html.Div(
         ),
     ]
 ) """
+
 
 upload_layout = html.Div([
     dcc.Upload(
@@ -197,7 +198,7 @@ app.layout = html.Div(
                     className="one-half column",
                     id="title",
                 ),
-                
+                                
                 html.Div(
                     [
                         toast_datasplit,
@@ -232,18 +233,27 @@ app.layout = html.Div(
                         #     className="control_label",
                         # ),
                         html.Div(id='slider-output-container'),
-                       dcc.Slider(id = "slider",
-                        min=0,
-                        max=100,
-                        value=70,
-                        marks={
-                            0: {'label': '0', 'style': {'color': '#77b0b1'}},
-                            25: {'label': '25'},
-                            50: {'label': '50'},
-                            75: {'label': '75'},
-                            100: {'label': '100', 'style': {'color': '#f50'}}
-                        }
-                    ),
+                        html.Br(),
+                        # dcc.Slider(id = "slider",
+                        #     min=0,
+                        #     max=100,
+                        #     value=70,
+                        #     marks={
+                        #         0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                        #         25: {'label': '25'},
+                        #         50: {'label': '50'},
+                        #         75: {'label': '75'},
+                        #         100: {'label': '100', 'style': {'color': '#f50'}}
+                        #     }
+                        # ),
+                        daq.Slider(
+                            id = 'slider',
+                            min=0,
+                            max=100,
+                            value=70,
+                            handleLabel={"showCurrentValue": True,"label": "SPLIT"},
+                            step=10
+                        ),
                         # html.P("Show Data Summary", className="control_label"),
                         # dcc.RadioItems(
                         #     id="well_status_selector",
@@ -273,6 +283,48 @@ app.layout = html.Div(
                             multi=True,
                             className="dcc_control",
                         ),
+                        html.Div(
+                            [
+                                html.Div(
+                                    [
+                                        # daq.Knob(
+                                        #     id='id-daq-splits',
+                                        #     min=0,
+                                        #     max=10,
+                                        #     value=2,
+                                        #     size = 75,
+                                        #     scale={'start':0, 'labelInterval': 1, 'interval': 1},
+                                        #     label = 'Select number of splits'                                            
+                                        # ),
+                                        html.P("Select Number of KFOLD Splits", className="control_label"),
+                                        # dcc.Dropdown(
+                                        #     id="id-daq-splits",
+                                        #     options=[{'label':x, 'value':x} for x in range(1,10)],
+                                        #     multi=False,
+                                        #     value= 2,
+                                        #     clearable=False,
+                                        #     className="dcc_control",
+                                        # ),
+                                        daq.NumericInput(
+                                            id='id-daq-splits',
+                                            min=0,
+                                            max=10,
+                                            size = 75,
+                                            value=2
+                                        ),  
+                                        # daq.Slider(
+                                        #     id = 'id-daq-splits',
+                                        #     min=0,
+                                        #     max=10,
+                                        #     value=2,
+                                        #     handleLabel={"showCurrentValue": True,"label": "FOLDS"},
+                                        #     step=2
+                                        # ) 
+                                    ],className="row flex-display",
+                                ),
+     
+                             ]
+                        ),
                         html.P("Select Models", className="control_label"),
                         dcc.Dropdown(
                             id="select_models",
@@ -283,9 +335,16 @@ app.layout = html.Div(
 
                         ),
                         html.Div(
-                            id = 'best-model', style={'color': 'grey', 'fontSize': 15} 
-                        )
-                      
+                            id = 'best-model', style={'color': 'blue', 'fontSize': 15} 
+                        ),html.Br(),
+                        daq.PowerButton(
+                            id = 'id-daq-switch-model',
+                            on='True',
+                            color='#1ABC9C', 
+                            size = 75,
+                            label = 'Initiate Model Buidling'
+                        ) ,
+                                                                        
                     ],
                     className="pretty_container four columns",
                     id="cross-filter-options",
@@ -389,6 +448,17 @@ app.layout = html.Div(
                                                 color = FONTCOLOR,
                                                 backgroundColor=BGCOLOR
                                         ),
+                                         
+                                    ],className="row flex-display",
+                                )
+  
+                            ],className="row flex-display",
+                        ),    
+                        html.Br(),   
+                        html.Div(
+                            [
+                                html.Div(
+                                  [
                                         daq.LEDDisplay(
                                             id='accuracy',
                                             #label="Default",
@@ -403,7 +473,7 @@ app.layout = html.Div(
                                 )
   
                             ],className="row flex-display",
-                        ),                       
+                        ),                  
                      
                     ],
                     className="pretty_container two columns",
@@ -430,11 +500,11 @@ app.layout = html.Div(
                         html.Div(
                             [     
                                 html.Div(
-                                    [dcc.Graph(id="pie_graph", figure = corelationMatrix())],
+                                    [dcc.Graph(id="pie_graph", figure = multiModel.corelationMatrix())],
                                     className="pretty_container six columns",
                                 ),                                  
                                 html.Div(
-                                    [dcc.Graph(id="aggregate_graph1", figure = featureImportance())],
+                                    [dcc.Graph(id="aggregate_graph1", figure = multiModel.featureImportance())],
                                     className="pretty_container six columns",
                                 ),
                             ],
@@ -467,10 +537,11 @@ app.layout = html.Div(
                             showCurrentValue=True,
                             value=50
                         ) ,   
+                        html.Br(),
                         html.Div(
                             #[
                                 html.Div(
-                                    id='my-output', style={'color': 'blue', 'fontSize': 15}                     
+                                    id='id-insights', style={'color': 'blue', 'fontSize': 15}                     
                                 )
                             
                             #],className="pretty_container six columns",
@@ -487,8 +558,8 @@ app.layout = html.Div(
         html.Div(
             dash_table.DataTable(
                 id='table',
-                columns=[{"name": i, "id": i} for i in df_head.columns],
-                data = df_head.to_dict('records'),
+                columns=[{"name": i, "id": i} for i in multiModel.df_head.columns],
+                data = multiModel.df_head.to_dict('records'),
                 editable=True,
                 filter_action="native",
                 sort_action="native",
@@ -534,7 +605,9 @@ def update_text(data):
      Output("recall", 'value'),
      Output("accuracy", 'value'),
      Output("trainset", 'value'),
-     Output("testset", 'value')
+     Output("testset", 'value'),
+     Output('model-graduated-bar', 'value'),
+     Output('id-insights', 'children')
     ],
     [
      Input("select_target", "value"),
@@ -545,7 +618,7 @@ def update_text(data):
 def variableSelection(target, independent, slider):
     fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
     #return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider),'Precision:{}'.format(precision),'Recall: {}'.format(recall),'Accuracy: {}'.format(accuracy)
-    return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider), precision, recall, accuracy,trainX,testX 
+    return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider), precision, recall, accuracy,trainX,testX, accuracy, f'The best performing model with accuracy of {accuracy}, precision of {precision} and recall of {recall}'
 
 @app.callback(
     Output('auto-toast', 'is_open'),
@@ -569,27 +642,27 @@ def open_toast_model(target, independent, slider):
     else:
         return False
 
-@app.callback(
-    dash.dependencies.Output('model-graduated-bar', 'value'),
-    [
-     Input("select_target", "value"),
-     Input("select_independent", "value"),
-     Input("slider", "value")
-    ]
-)
-def update_graduatedBar(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
-    return auc*100
+# @app.callback(
+#     dash.dependencies.Output('model-graduated-bar', 'value'),
+#     [
+#      Input("select_target", "value"),
+#      Input("select_independent", "value"),
+#      Input("slider", "value")
+#     ]
+# )
+# def update_graduatedBar(target, independent, slider):
+#     fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
+#     return auc*100
 
 
 
-@app.callback(
-    Output('my-output', 'children'),
-    Input("slider", "value")
+# @app.callback(
+#     Output('my-output', 'children'),
+#     Input("slider", "value")
     
-)
-def update_graduatedBar(value):
-    return "The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation"
+# )
+# def update_graduatedBar(value):
+#     return "The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation"
 
 
 @app.callback(Output('output-data-upload', 'children'),
@@ -608,19 +681,24 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 @app.callback(
     [
         Output("model-graphs", 'figure'),     
-        Output("best-model", 'children'),  
+        Output("best-model", 'children'), 
+        Output("id-daq-switch-model", 'on')
         
-           
     ],
     [
         Input("select_target", "value"),
         Input("select_independent", "value"),
-        Input("slider", "value")
+        Input("slider", "value"),
+        Input("id-daq-splits", "value"),
+        Input("select_models", "value")        
     ]
 )
-def measurePerformance(target, independent, slider):
-    fig_model = getModels(target,independent, slider)
-    return fig_model, 'The best performing model is GLM'
+def measurePerformance(target, independent, slider, splits, selected_models):
+    fig_model, bestModel = multiModel.getModels(target,independent, slider, splits, selected_models)
+    return fig_model, f'The best performing model is {bestModel}', True
+
+
+
 
 
 if __name__ == '__main__':

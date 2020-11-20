@@ -1,7 +1,7 @@
 from sklearn.datasets import make_classification
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.metrics import roc_curve, roc_auc_score, recall_score, precision_score,accuracy_score
 import plotly.figure_factory as ff
 import pandas as pd
 import numpy as np
@@ -25,6 +25,7 @@ def buildModel(target, independent, slider):
         model.fit(trainX, trainy)
         
         lr_probs = model.predict_proba(testX)
+        yhat = model.predict(testX)
         # keep probabilities for the positive outcome only
         
         lr_probs = lr_probs[:, 1]
@@ -69,8 +70,15 @@ def buildModel(target, independent, slider):
 
         fig_thresh.update_yaxes(scaleanchor="x", scaleratio=1)
         fig_threshold = fig_thresh.update_xaxes(range=[0, 1], constrain='domain')
+
+        # precision tp / (tp + fp)
+        precision = round(precision_score(testy, yhat),2)
+        # recall: tp / (tp + fn)
+        recall = round(recall_score(testy, yhat),2)
+        accuracy = round(accuracy_score(testy, yhat)*100,2)
+        
                 
-        return fig_ROC, fig_precision, fig_threshold, '0.5','0.6','0.85', trainX.shape[0], testX.shape[0],lr_auc
+        return fig_ROC, fig_precision, fig_threshold, precision, recall, accuracy, trainX.shape[0], testX.shape[0],lr_auc
     
     except:
         logging.exception('Something went wrong with AUC curve and Precision/Recall plot')
