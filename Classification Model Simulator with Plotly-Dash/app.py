@@ -18,9 +18,6 @@ import matplotlib as plt
 import pandas as pd
 import dash_daq as daq
 import plotly.express as px
-from urllib.parse import quote as urlquote
-from flask import Flask, send_from_directory
-from dash.dependencies import Input, Output, State, ClientsideFunction
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -29,7 +26,9 @@ import dash_daq as daq
 from models import *
 from defintion import *
 from multiModel import multiModel
-
+from urllib.parse import quote as urlquote
+from flask import Flask, send_from_directory
+from dash.dependencies import Input, Output, State, ClientsideFunction
 
 
 models = ['LGBM', 'Random Forest', 'KNN', 'GNB', 'DT', 'ADABoost','Logistic']
@@ -160,12 +159,7 @@ app.layout = html.Div(
         html.Div(id="output-clientside"),
         html.Div(
             [
-                # daq.PowerButton(id = "power",
-                #         on='True',
-                #         size=50
-                #     ),
-                    
-                                    
+    
                 html.Div(
                     [
                         html.Img(
@@ -228,24 +222,9 @@ app.layout = html.Div(
                             className="control_label",
                         ),
                         upload_layout,
-                        # html.P(
-                        #     "Select Train & Test Split:",
-                        #     className="control_label",
-                        # ),
                         html.Div(id='slider-output-container'),
                         html.Br(),
-                        # dcc.Slider(id = "slider",
-                        #     min=0,
-                        #     max=100,
-                        #     value=70,
-                        #     marks={
-                        #         0: {'label': '0', 'style': {'color': '#77b0b1'}},
-                        #         25: {'label': '25'},
-                        #         50: {'label': '50'},
-                        #         75: {'label': '75'},
-                        #         100: {'label': '100', 'style': {'color': '#f50'}}
-                        #     }
-                        # ),
+   
                         daq.Slider(
                             id = 'slider',
                             min=0,
@@ -254,23 +233,12 @@ app.layout = html.Div(
                             handleLabel={"showCurrentValue": True,"label": "SPLIT"},
                             step=10
                         ),
-                        # html.P("Show Data Summary", className="control_label"),
-                        # dcc.RadioItems(
-                        #     id="well_status_selector",
-                        #     options=[
-                        #         {"label": "Stats ", "value": "Stats"},
-                        #         {"label": "Plots ", "value": "Plots"},
-                        #         {"label": "Outliers ", "value": "Outliers"},
-                        #     ],
-                        #     value="Stats",
-                        #     labelStyle={"display": "inline-block"},
-                        #     className="dcc_control",
-                        # ),
+
                         html.P("Select Target", className="control_label"),
                         dcc.Dropdown(
                             id="select_target",
                             options=[{'label':x, 'value':x} for x in obj_Data.df_train_dummies.columns],
-                            multi=True,
+                            multi=False,
                             value='Loan_Status',
                             clearable=False,
                             className="dcc_control",
@@ -287,24 +255,8 @@ app.layout = html.Div(
                             [
                                 html.Div(
                                     [
-                                        # daq.Knob(
-                                        #     id='id-daq-splits',
-                                        #     min=0,
-                                        #     max=10,
-                                        #     value=2,
-                                        #     size = 75,
-                                        #     scale={'start':0, 'labelInterval': 1, 'interval': 1},
-                                        #     label = 'Select number of splits'                                            
-                                        # ),
                                         html.P("Select Number of KFOLD Splits", className="control_label"),
-                                        # dcc.Dropdown(
-                                        #     id="id-daq-splits",
-                                        #     options=[{'label':x, 'value':x} for x in range(1,10)],
-                                        #     multi=False,
-                                        #     value= 2,
-                                        #     clearable=False,
-                                        #     className="dcc_control",
-                                        # ),
+
                                         daq.NumericInput(
                                             id='id-daq-splits',
                                             min=0,
@@ -312,25 +264,19 @@ app.layout = html.Div(
                                             size = 75,
                                             value=2
                                         ),  
-                                        # daq.Slider(
-                                        #     id = 'id-daq-splits',
-                                        #     min=0,
-                                        #     max=10,
-                                        #     value=2,
-                                        #     handleLabel={"showCurrentValue": True,"label": "FOLDS"},
-                                        #     step=2
-                                        # ) 
+  
                                     ],className="row flex-display",
                                 ),
      
                              ]
                         ),
-                        html.P("Select Models", className="control_label"),
+                        html.P("Models", className="control_label"),
                         dcc.Dropdown(
                             id="select_models",
                             options = [{'label':x, 'value':x} for x in models],
                             value = models,
                             multi=True,
+                            clearable=False,
                             className="dcc_control",
 
                         ),
@@ -344,7 +290,7 @@ app.layout = html.Div(
                             size = 75,
                             label = 'Initiate Model Buidling'
                         ) ,
-                                                                        
+                                                                                               
                     ],
                     className="pretty_container four columns",
                     id="cross-filter-options",
@@ -356,7 +302,7 @@ app.layout = html.Div(
                             daq.LEDDisplay(
                                 id='records',
                                 #label="Default",
-                                value=6,
+                                value=0,
                                 label = "Records",
                                 size=FONTSIZE,
                                 color = FONTCOLOR,
@@ -370,7 +316,7 @@ app.layout = html.Div(
                                         daq.LEDDisplay(
                                             id='trainset',
                                             #label="Default",
-                                            value=6,
+                                            value=0,
                                             label = "Train",
                                             size=FONTSIZE,
                                             color = FONTCOLOR,
@@ -379,7 +325,7 @@ app.layout = html.Div(
                                         daq.LEDDisplay(
                                             id='testset',
                                             #label="Default",
-                                            value=6,
+                                            value=0,
                                             label = "Test",
                                             size=FONTSIZE,
                                             color = FONTCOLOR,
@@ -396,7 +342,7 @@ app.layout = html.Div(
                                     daq.LEDDisplay(
                                         id='numeric',
                                         #label="Default",
-                                        value=6,
+                                        value=0,
                                         label = "numeric",
                                         size=FONTSIZE,
                                         color = FONTCOLOR,
@@ -405,7 +351,7 @@ app.layout = html.Div(
                                     daq.LEDDisplay(
                                         id='variables',
                                         #label="Default",
-                                        value=6,
+                                        value=0,
                                         label = "variables",
                                         size=FONTSIZE,
                                         color = FONTCOLOR,
@@ -414,7 +360,7 @@ app.layout = html.Div(
                                     daq.LEDDisplay(
                                         id='categorical',
                                         #label="Default",
-                                        value=6,
+                                        value=0,
                                         label = "categorical",
                                         size=FONTSIZE,
                                         color = FONTCOLOR,
@@ -433,7 +379,7 @@ app.layout = html.Div(
                                         daq.LEDDisplay(
                                             id='precision',
                                             #label="Default",
-                                            value=6,
+                                            value=0,
                                             label = "Precision",
                                             size=FONTSIZE,
                                             color = FONTCOLOR,
@@ -442,7 +388,7 @@ app.layout = html.Div(
                                         daq.LEDDisplay(
                                                 id='recall',
                                                 #label="Default",
-                                                value=6,
+                                                value=0,
                                                 label = "Recall",
                                                 size=FONTSIZE,
                                                 color = FONTCOLOR,
@@ -462,12 +408,21 @@ app.layout = html.Div(
                                         daq.LEDDisplay(
                                             id='accuracy',
                                             #label="Default",
-                                            value=6,
+                                            value=0,
                                             label = "Accuracy",
                                             size=FONTSIZE,
                                             color = FONTCOLOR,
                                             backgroundColor=BGCOLOR
                                         ),   
+                                        daq.LEDDisplay(
+                                            id='auc',
+                                            #label="Default",
+                                            value= 0,
+                                            label = "AUC",
+                                            size=FONTSIZE,
+                                            color = FONTCOLOR,
+                                            backgroundColor=BGCOLOR
+                                        ),  
                                         
                                     ],className="row flex-display",
                                 )
@@ -596,73 +551,11 @@ def update_text(data):
 
 
 @app.callback(
-    [
-     Output("main_graph", 'figure'),
-     Output("individual_graph", 'figure'),
-     Output("aggregate_graph", 'figure'),
-     Output("slider-output-container", 'children'),
-     Output("precision", 'value'),
-     Output("recall", 'value'),
-     Output("accuracy", 'value'),
-     Output("trainset", 'value'),
-     Output("testset", 'value'),
-     Output('model-graduated-bar', 'value'),
-     Output('id-insights', 'children')
-    ],
-    [
-     Input("select_target", "value"),
-     Input("select_independent", "value"),
-     Input("slider", "value")
-    ]
-)
-def variableSelection(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
-    #return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider),'Precision:{}'.format(precision),'Recall: {}'.format(recall),'Accuracy: {}'.format(accuracy)
-    return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider), precision, recall, accuracy,trainX,testX, accuracy, f'The best performing model with accuracy of {accuracy}, precision of {precision} and recall of {recall}'
-
-@app.callback(
     Output('auto-toast', 'is_open'),
     [Input('slider', 'value')]
 )
 def open_toast(value):
     return True
-
-@app.callback(
-    Output('auto-toast-model', 'is_open'),
-    [
-     Input("select_target", "value"),
-     Input("select_independent", "value"),
-     Input("slider", "value")
-    ]
-)
-def open_toast_model(target, independent, slider):
-    fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
-    if auc < 0.7:
-        return True
-    else:
-        return False
-
-# @app.callback(
-#     dash.dependencies.Output('model-graduated-bar', 'value'),
-#     [
-#      Input("select_target", "value"),
-#      Input("select_independent", "value"),
-#      Input("slider", "value")
-#     ]
-# )
-# def update_graduatedBar(target, independent, slider):
-#     fig_ROC, Fig_Precision, fig_Threshold, precision, recall, accuracy, trainX, testX, auc = buildModel(target,independent, slider)
-#     return auc*100
-
-
-
-# @app.callback(
-#     Output('my-output', 'children'),
-#     Input("slider", "value")
-    
-# )
-# def update_graduatedBar(value):
-#     return "The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation | The recommendations functionality is under implementation"
 
 
 @app.callback(Output('output-data-upload', 'children'),
@@ -680,9 +573,22 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 
 @app.callback(
     [
+        Output("main_graph", 'figure'),
+        Output("individual_graph", 'figure'),
+        Output("aggregate_graph", 'figure'),
+        Output("slider-output-container", 'children'),
+        Output("precision", 'value'),
+        Output("recall", 'value'),
+        Output("accuracy", 'value'),
+        Output("auc", 'value'),
+        Output("trainset", 'value'),
+        Output("testset", 'value'),
+        Output('model-graduated-bar', 'value'),
+        Output('id-insights', 'children'),
         Output("model-graphs", 'figure'),     
         Output("best-model", 'children'), 
-        Output("id-daq-switch-model", 'on')
+        Output("id-daq-switch-model", 'on'),
+        Output('auto-toast-model', 'is_open')
         
     ],
     [
@@ -694,10 +600,19 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
     ]
 )
 def measurePerformance(target, independent, slider, splits, selected_models):
-    fig_model, bestModel = multiModel.getModels(target,independent, slider, splits, selected_models)
-    return fig_model, f'The best performing model is {bestModel}', True
+    fig_ROC, Fig_Precision, fig_Threshold,precision, recall, accuracy, trainX, testX, auc, fig_model, bestModel = multiModel.getModels(target,independent, slider, splits, selected_models)
+    auc_toast = True if auc < 0.5 else False
+    return fig_ROC, Fig_Precision, fig_Threshold, 'Train / Test split size: {} / {}'.format(slider, 100-slider), precision, recall, accuracy,auc, trainX, testX, auc*100, f'The best performing model is {bestModel} with accuracy of {accuracy}, precision of {precision} and recall of {recall} with Area under curve of {auc}. Try for various K FOLD values to explore further.' ,fig_model, f'The top performaing model is {bestModel}', True, auc_toast
 
+     
 
+@app.callback(
+    Output('select_independent', 'value'),
+    Input('select_target', 'value')    
+)
+def variablesPopulate(y):
+    return  [x for x in obj_Data.df_train_dummies.columns if x != y]
+    
 
 
 

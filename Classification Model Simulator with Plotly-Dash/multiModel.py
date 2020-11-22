@@ -4,6 +4,7 @@ import logging
 import lightgbm as lgb
 from sklearn import tree
 import plotly.express as px
+#import plotly.graph_objs as go
 import matplotlib.pyplot as plt
 import sklearn.metrics as metrics
 from sklearn.metrics import roc_curve
@@ -16,6 +17,7 @@ from sklearn.ensemble import RandomForestClassifier,AdaBoostClassifier
 from sklearn.metrics import roc_auc_score,accuracy_score ,confusion_matrix, f1_score, precision_score, recall_score
 from sklearn.model_selection import StratifiedKFold,KFold,GridSearchCV,GroupKFold,train_test_split,StratifiedShuffleSplit
 from defintion import *
+from models import *
 
 # Logging in DEBUG mode in the file model.log
 logging.basicConfig(filename= 'model.log',  level = logging.DEBUG,format='%(asctime)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s')
@@ -39,8 +41,8 @@ class multiModel:
 
         try: 
             #target = 'Loan_Status'
-            X = obj_Data.df_train_dummies.drop(['Loan_Status'], axis=1)
-            y = obj_Data.df_train_dummies['Loan_Status']
+            X = df
+            y = target
             X_train, X_validation, y_train, y_validation = train_test_split(X, y, train_size=slider/100, random_state=1234)
             feats = [
                     'Dependents', 'ApplicantIncome', 'CoapplicantIncome',
@@ -50,7 +52,7 @@ class multiModel:
             ]       
 
             #splits = 2
-            levels = df[target].nunique()
+            levels = y.nunique()
             folds =StratifiedKFold(n_splits=splits, random_state=22,shuffle=True)
             oof_preds = np.zeros((len(obj_Data.df_test_dummies), levels))
             #feature_importance_df = pd.DataFrame()
@@ -236,19 +238,28 @@ class multiModel:
         """
 
         try:
-            df_train_dummies1 = obj_Data.df_test_dummies[independent]   
-            getModelResults, bestModel = multiModel.fun_SKFold_Binary_ClassificationAll(df_train_dummies1, 'Loan_Status', slider, splits, selected_models)         
+            df_train_dummies1 = obj_Data.df_train_dummies[independent] 
+            target = obj_Data.df_train_dummies[target]   
+            getModelResults, bestModel = multiModel.fun_SKFold_Binary_ClassificationAll(df_train_dummies1, target, slider, splits, selected_models)      
+            fig_ROC, fig_precision, fig_threshold, precision, recall, accuracy, trainX, testX, lr_auc =  buildModel(target, df_train_dummies1, slider, bestModel)
             #print(df_train_dummies1)
             logging.debug(getModelResults)     
             logging.debug('Model building successful')  
             fig_modelPerformance = px.bar(getModelResults, x= 'Avg Accuracy', y ='Model Name', title= 'Model Performance', orientation='h', color= 'Avg Accuracy')
-            return fig_modelPerformance, bestModel
+            #fig_modelPerformance = go.Figure(fig_modelPerformance)
+            return fig_ROC, fig_precision, fig_threshold, precision, recall, accuracy, trainX, testX, lr_auc, fig_modelPerformance, bestModel
         
         except:
             logging.exception('Something went wrong.')
 
         
     def featureImportance():
+
+        """[This fucntion generates feature importance bar chart]
+
+        Returns:
+            [figure]: [A feature importance bar plot using plotly express]
+        """
         try:
             X = obj_Data.df_train_dummies.drop(['Loan_ID','Loan_Status'], axis=1)
             y = obj_Data.df_train_dummies['Loan_Status']
@@ -266,6 +277,12 @@ class multiModel:
 
 
     def corelationMatrix():
+
+        """This function generates corelation matrix
+
+        Returns:
+            [figure]: [A corelation matrix using plotly express]
+        """
         try:
             corr_matrix = obj_Data.df.corr()
             fig = px.imshow(corr_matrix, title= "Corelation Matrix")
@@ -285,3 +302,5 @@ class multiModel:
     df_describe = obj_Data.df.describe()
     df_describe.reset_index(inplace= True)
     df_head = obj_Data.df.head(15)
+
+

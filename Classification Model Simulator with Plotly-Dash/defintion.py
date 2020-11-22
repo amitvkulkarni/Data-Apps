@@ -1,15 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
-#from os import path
 import plotly.express as px
-
-
-# basepath = path.dirname(__file__)
-# basepath
-# # filepath = path.abspath(path.join(basepath))
-# # filepath
-# f = open(basepath, "r")
 
 class Data:
     def __init__(self):     
@@ -23,4 +15,5 @@ class Data:
 
 # creating data object
 obj_Data = Data()
+
 
