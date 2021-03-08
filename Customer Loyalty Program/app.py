@@ -7,7 +7,6 @@ import numpy as np
 import pathlib
 import dash_table
 import logging
-from RFM import *
 import dash_daq as daq
 import plotly.graph_objs as go
 import plotly.express as px
@@ -16,6 +15,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
+from datetime import timedelta
 import layout 
 import dataPreprocess
 
@@ -270,7 +270,7 @@ app.layout = html.Div(
                                 html.Div(
                                     #className="bg-white",
                                     children=[
-                                        html.H4("FREQUENCY VS MONETARY"),
+                                        html.H4("FREQUENCY VS RECENCY"),
                                         dcc.Graph(id="fig_rf"),
                                     ],
                                 )
@@ -499,6 +499,10 @@ def update_rfmScatterPlot(country):
             
         else:
 
+            # fig_mr = px.scatter(df_rfmScatterPlot, x="Recency", y="MonetaryValue", size="RFM_Score", color="RFM_Level",
+            #            hover_name="Country", log_x=True,  size_max=10)
+            # fig_mr.update_layout(showlegend=False)
+
             fig_mr = px.scatter(df_rfmScatterPlot, x="Recency", y="MonetaryValue", size="RFM_Score", color="RFM_Level",
                        hover_name="Country", log_x=True,  size_max=10)
             fig_mr.update_layout(showlegend=False)
@@ -521,9 +525,5 @@ def update_rfmScatterPlot(country):
 
 if __name__ == "__main__":    
     app.run_server(debug=True, use_reloader=True)
-
-
-
-
 
 
