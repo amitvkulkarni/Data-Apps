@@ -11,9 +11,9 @@ import logging
 import dash_table
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
-from RFM import *
 import dash_daq as daq
 import plotly.figure_factory as ff
+from datetime import timedelta
 
 
 # Logging in DEBUG mode in the file RFM.log
