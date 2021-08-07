@@ -77,6 +77,7 @@ app.layout = html.Div(
                                 ),
                             ],
                         ),
+                        html.Br(),
                         html.Div(
                             className="padding-top-bot",
                             children=[
@@ -102,7 +103,7 @@ app.layout = html.Div(
                         ),
 
 
-                        # html.Br(),
+                        html.Br(),
                         html.Div(
                             className="padding-top-bot",
                             children=[
@@ -123,12 +124,15 @@ app.layout = html.Div(
                             ],
                         ),
                         html.Br(),
+                        html.Br(),
+                        html.Br(),
+                        
                         html.H6("RECOMMENDATION:"),
                         html.Div(
                             id = 'id-insights', style={'color': 'DarkCyan', 'fontSize': 15} 
                         ),
                         html.Br(),                    
-                        html.Div(dbc.Button("GET CODE", color="primary", className="mr-1", href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Price%20Opitimization",target='_blank')),
+                        html.Div(dbc.Button("GET CODE", color="primary", className="mr-1", href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Price%20Optimization",target='_blank')),
 
 
 

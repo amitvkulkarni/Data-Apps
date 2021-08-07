@@ -9,9 +9,23 @@ import plotly.graph_objects as go
 
 
 def fun_optimize(var_opt, var_range, var_cost, df):
+    """[summary]
+
+    Args:
+        var_opt ([string]): [The value will be either price or quantity based on the selection made from UI]
+        var_range ([int]): [The value will be maximum & minimum quantity based on selection made from range slider from UI]
+        var_cost ([type]): [This is the fixed cost entered from UI]
+        df ([type]): [The data set for our usecase]
+
+    Returns:
+        [list]: [Returns a dataframe for table, 
+                chart for Price Vs Quantity, 
+                chart for optimized quantity set for maximum revenue, 
+                Optimized value of revenue]
+    """
 
     fig_PriceVsQuantity = px.scatter(
-        df, x="Price", y="Quantity", color="Cost", trendline="ols")
+        df, x="Price", y="Quantity", color="Year", trendline="ols")
 
     # fit OLS model
     model = ols("Price ~ Quantity ", data=df).fit()

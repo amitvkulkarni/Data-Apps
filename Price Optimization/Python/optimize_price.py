@@ -11,9 +11,23 @@ import plotly.graph_objects as go
 df = pd.read_csv('Data/price.csv')
 
 def fun_optimize(var_opt, var_range, var_cost, df):
+    """[summary]
+
+    Args:
+        var_opt ([string]): [The value will be either price or quantity based on the selection made from UI]
+        var_range ([int]): [The value will be maximum & minimum price based on selection made from range slider from UI]
+        var_cost ([type]): [This is the fixed cost entered from UI]
+        df ([type]): [The data set for our usecase]
+
+    Returns:
+        [list]: [Returns a dataframe for table, 
+                chart for Price Vs Quantity, 
+                chart for optimized price set for maximum revenue, 
+                Optimized value of revenue]
+    """
 
     fig_PriceVsQuantity = px.scatter(
-        df, x="Price", y="Quantity", color="Cost", trendline="ols")
+        df, x="Price", y="Quantity", color="Year", trendline="ols")
 
     # fit OLS model
     model = ols("Quantity ~ Price", data=df).fit()
@@ -31,10 +45,7 @@ def fun_optimize(var_opt, var_range, var_cost, df):
         {"Price": Price, "Revenue": Revenue, "Quantity": quantity})
 
     max_val = profit.loc[(profit['Revenue'] == profit['Revenue'].max())]
-    #print(max_val)
-    #max_price = max_val['Price'].values[0]
-    #print(max_price)
-    
+        
     fig_PriceVsRevenue = go.Figure()
     fig_PriceVsRevenue.add_trace(go.Scatter(
         x=profit['Price'], y=profit['Revenue']))
