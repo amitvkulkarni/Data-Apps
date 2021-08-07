@@ -4,6 +4,6 @@ This is a simulation app which helps businesses to quickly identify the optimal 
 ## [Read more on this on my blog](Blog URL to be updated)
 
 ## Here is the preview of the app:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/4c10b10c5d2b3bef7da99846d2645b62fd39f8a2/Price%20Optimization/Home.png)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/75accd84f0a89fadfb42cc62484a78d68c51ed6d/Price%20Optimization/Home.png)
 
 
