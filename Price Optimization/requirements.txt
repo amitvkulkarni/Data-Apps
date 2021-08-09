@@ -1,0 +1,21 @@
+# local package install
+-e .
+
+# third party packages
+dash
+pandas
+numpy
+dash_table
+logging
+plotly.graph_objs
+plotly.express
+dash_core_components
+dash_html_components
+dash_bootstrap_components
+dash.dependencies
+Python.optimize_price
+Python.optimize_quantity
+dash_daq as daq
+matplotlib.pyplot
+seaborn
+statsmodels.formula.api
