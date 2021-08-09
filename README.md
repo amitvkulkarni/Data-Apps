@@ -9,5 +9,5 @@
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/0a53fc7180efe3045cdfb74861b76d85857ff96a/Customer%20Loyalty%20Program/Images/Home2.PNG)
 
 ## Product Price Optimization App build with Python & Dash:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/cad2df6fc748a602ee21c1a238cc25910ba2cf4e/Price%20Optimization/Home.png)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/75accd84f0a89fadfb42cc62484a78d68c51ed6d/Price%20Optimization/Home.png)
 
