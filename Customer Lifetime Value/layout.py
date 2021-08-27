@@ -19,17 +19,11 @@ layout_all = html.Div([
             html.H3("Select Country"),
             dcc.Dropdown(
                 id="id-country-dropdown",
-                    # options=[
-                    #     {'label': 'All', 'value': 'All'},
-                    #     {'label': 'France', 'value': 'France'},
-                    #     {'label': 'Australia', 'value': 'Australia'},
-                    #     {'label': 'United States', 'value': 'USA'}
-                    # ],
                     options=[
                             {"label": i, "value": i} for i in list(pp.filtered_data.Country.unique())
                         ],
                     multi = False
-                    #value = "All"
+                    
                 )
             ]),
         html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
@@ -55,32 +49,32 @@ layout_all = html.Div([
                     html.Div([
                         html.H2('Total Customers', style={
                             'font-weight': 'normal'}),
-                        html.H2(id='id_total_customer')
+                        html.H2(id='id_total_customer', style = {'color': 'DarkSlateGray'}),
                     ], className='box_emissions'),
 
                     html.Div([
                         html.H2('Total Transactions', style={
                             'font-weight': 'normal'}),
-                        html.H2(id='id_total_transactions')
+                        html.H2(id='id_total_transactions', style = {'color': 'DarkSlateGray'}),
                     ], className='box_emissions'),
 
                     html.Div([
-                        html.H2('Total Sales ($)', style={
+                        html.H2('Total Sales($)', style={
                             'font-weight': 'normal'}),
-                        html.H2(id='id_total_sales')
+                        html.H2(id='id_total_sales', style = {'color': 'DarkSlateGray'}),
                     ], className='box_emissions'),
 
                     html.Div([
-                        html.H2('Avg Order Value ($)', style={
+                        html.H2('Avg Order Value($)', style={
                             'font-weight': 'normal'}),
-                        html.H2(id='id_order_value')
+                        html.H2(id='id_order_value', style = {'color': 'DarkSlateGray'}),
                     ], className='box_emissions'),
 
-                    html.Div([
-                        html.H2('Churn %', style={
-                            'font-weight': 'normal'}),
-                        html.H2(id='id_churn')
-                    ], className='box_emissions'),
+                    # html.Div([
+                    #     html.H2('Repeat Rate(%)', style={
+                    #         'font-weight': 'normal'}),
+                    #     html.H2(id='id_churn', style = {'color': 'DarkSlateGray'}),
+                    # ], className='box_emissions'),
 
 
                 ], style={'display': 'flex'}),
@@ -119,20 +113,19 @@ layout_all = html.Div([
                                 columns=[
                                     {'name': 'CustomerID', 'id': 'CustomerID',
                                         'type': 'numeric'},
+                                    {'name': 'Country', 'id': 'Country',
+                                        },
                                     {'name': 'Tansactions', 'id': 'num_transactions',
                                         'type': 'numeric'},
-                                    {'name': 'Money Spent', 'id': 'spent_money',
+                                    {'name': 'Money Spent($)', 'id': 'spent_money',
                                         'type': 'numeric'},
-                                    {'name': 'Avg Order Value', 'id': 'avg_order_value',
+                                    {'name': 'Avg Order Value($)', 'id': 'avg_order_value',
                                         'type': 'numeric'},
-                                    {'name': 'Profit Margin', 'id': 'profit_margin',
+                                    {'name': 'Profit Margin($)', 'id': 'profit_margin',
                                         'type': 'numeric'},
                                     {'name': 'CLV', 'id': 'CLV',
                                         'type': 'numeric'},
-                                    # {'name': 'Country', 'id': 'Country',
-                                    #     },
-                                    # {'name': 'TotalPurchase', 'id': 'TotalPurchase',
-                                    #     'type': 'numeric'}
+                                    
                                 ],
                                   style_data_conditional=[
                                                 {
@@ -167,7 +160,7 @@ layout_all = html.Div([
                                             style_header={
                                                 'backgroundColor': 'rgb(230, 230, 230)',
                                                 'fontWeight': 'bold',
-                                                # 'border': '1px solid black'
+                                                
                                             },
                                             style_data={
                                                 'whiteSpace': 'normal',
