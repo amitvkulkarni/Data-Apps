@@ -1,0 +1,21 @@
+#INITIAL SETTINGS
+
+# Diameter
+diameter_mean: 150
+diameter_cov: 5
+
+# Thickness
+thickness_mean: 4
+thickness_cov: 5
+
+# Yield Strength
+yield_mean: 200
+yield_cov: 10
+
+# Internal Pressure
+internal_pressure: 10
+
+# Iterations
+iter_start: 1000
+iter_end: 20000
+iter_step: 1000
