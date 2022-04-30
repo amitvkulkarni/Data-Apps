@@ -1,11 +1,11 @@
-# Python App to Measure Customer Lifetime Value (CLV)
+# Monte Carlo Simulation For Pipe Failure
 
-Customer Lifetime Value is the profit that a business will make from a specific customer over the period of their association with the business. Every industry has its own set of metrics that are tracked and measured to help businesses target the right customer and forecast their customer base for the future. The CLV may change depending on the business model and its objective which means the definition and calculation need to be revisited regularly. The app helps businesses identify, segment, understand customers and products better. 
+Monte Carlo Simulation is a technique that allows decision-makers to account for risk in quantitative analysis and decision making. It increases the variability by infusing a wide range of values that are part of the same distribution (values that are in a similar range as actual data) and present with various possible outcomes. Further, there are many iterations sometimes in thousands, and the outcome from each iteration is measured. Simulation outcomes that are backed by domain expertise can assist in making decisions that are more than a hunch or gut and are supported by the data that mimics the possible business scenarios.
 
-## [Read more on my blog](https://www.analyticsvidhya.com/blog/2021/08/create-a-python-app-to-measure-customer-lifetime-value-clv/?)
+## [Read more on my blog](https://amitvkulkarni.medium.com/monte-carlo-simulation-for-pipe-failure-in-python-3e9729728281)
 
-## Here is the preview of the app:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6e964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png)
+<!-- ## Here is the preview of the app:</br>
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6e964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png) -->
 
 
 
