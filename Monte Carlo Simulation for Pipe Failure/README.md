@@ -4,8 +4,8 @@ Monte Carlo Simulation is a technique that allows decision-makers to account for
 
 ## [Read more on my blog](https://amitvkulkarni.medium.com/monte-carlo-simulation-for-pipe-failure-in-python-3e9729728281)
 
-<!-- ## Here is the preview of the app:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6e964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png) -->
+## Here is the preview of the app:</br>
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/main/Monte%20Carlo%20Simulation%20for%20Pipe%20Failure/assets/home.png)
 
 
 
