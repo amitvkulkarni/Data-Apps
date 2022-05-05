@@ -3,48 +3,61 @@ import dash_table
 import dash_daq as daq
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 import pre_processing as pp
 
 
-gray_button_style = {'marginLeft': '20%', 'width': '50%', 'height':'40%',
+
+gray_button_style = {'marginLeft': '20%', 
+                    'width': '50%',
+                    'height':'80%',
                     "fontSize": "1rem",
                     "paddingLeft": "1px",
                     "paddingRight": "1px",
-                    'background-color': 'Black',
+                    'background-color': '#007bff',
                     'color': 'white',
                     'border-radius': '10px'}
 
-cornflower_blue_button_style = {'width': '100%', 'height':'40%',
-                    'background-color': 'Bright Blue',
-                    'color': 'gray',
-                    'border-radius': '10px'}
+cornflower_blue_button_style = {'width': '50%', 
+                                'height':'50%',
+                                'background-color': 'Bright Blue',
+                                'color': 'gray',
+                                'margin-top': '20px',
+                                'border-radius': '10px',
+                                "margin-left": "100px"}
+
+title_style = {'margin-top': '20px',
+               'margin-left': '20px'}
+
+# footer_style = {'background-color': 'Gray',}
 
 
 layout_all = html.Div([
-    
 
 
     html.Div(
         className="study-browser-banner row",
         children=[
-            html.Div(
-                className="div-logo",
-                children=html.Img(
-                    className="logo", src="./assets/dash-logo.png"
-                ),
-            ),
-            html.H2(className="h2-title",
-                    children="Monte Carlo Simulation For Pipe Failure"),
+            # html.Div(
+            #     className="div-logo",
+            #     children=html.Img(
+            #         className="logo", src="./assets/dash-logo.png"
+            #     ),
+            # ),
+                        
+            html.H2(className="title", 
+                    children="Monte Carlo Simulation For Pipe Failure", style = title_style),
 
-            html.A(                            
-                html.Button("CODE", id="learn-more-button", style = cornflower_blue_button_style),
-                href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Classification%20Model%20Simulator%20with%20Plotly-Dash", 
-                target = "_blank"
-            ),
+            # html.A(                            
+            #     html.Button("CODE", id="learn-more-button", style = cornflower_blue_button_style),
+            #     href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Classification%20Model%20Simulator%20with%20Plotly-Dash", target = "_blank"
+            # ),
         ],
+       
     ),
-
+    
+    
     html.Div([
         html.Div([
 
@@ -56,7 +69,7 @@ layout_all = html.Div([
                         id='val-diameter',
                         min=0,
                         max=100,
-                        value=50,
+                        value=65,
                         handleLabel={
                             "showCurrentValue": True, "label": "Value"},
                         step=10
@@ -67,12 +80,12 @@ layout_all = html.Div([
                         id='val-diameter-cov',
                         min=0,
                         max=10,
-                        value=5,
+                        value=7,
                         handleLabel={
                             "showCurrentValue": True, "label": "Value"},
                         step=1
                     ),
-                ], className='box', style={'height': '25%', 'width': '80%'}),
+                ], className='box', style={'height': '25%', 'width': '95%'}),
                 html.Div([
                     html.H3('Thickness'),
                     daq.Slider(
@@ -90,12 +103,12 @@ layout_all = html.Div([
                         id='val-thickness-cov',
                         min=0,
                         max=10,
-                        value=5,
+                        value=7,
                         handleLabel={
                             "showCurrentValue": True, "label": "Value"},
                         step=1
                     ),
-                ], className='box', style={'height': '25%', 'width': '80%'}),
+                ], className='box', style={'height': '25%', 'width': '95%'}),
                 html.Div([
                     html.H3('Yield Strength'),
                     daq.Slider(
@@ -113,12 +126,12 @@ layout_all = html.Div([
                         id='val-strength-cov',
                         min=0,
                         max=10,
-                        value=5,
+                        value=7,
                         handleLabel={
                             "showCurrentValue": True, "label": "Value"},
                         step=1
                     ),
-                ], className='box', style={'height': '25%', 'width': '80%'}),
+                ], className='box', style={'height': '25%', 'width': '95%'}),
                 html.Div([
                     html.H3('Internal Pressure'),
                     daq.Slider(
@@ -131,7 +144,7 @@ layout_all = html.Div([
                         step=10
                     ),
                 
-                ], className='box', style={'height': '25%', 'width': '80%'}),
+                ], className='box', style={'height': '25%', 'width': '95%'}),
                 html.Br(),
                                 
                 html.Div([
@@ -157,14 +170,37 @@ layout_all = html.Div([
             ], className='box', style={'padding-bottom': '15px'}),
             
             html.Div([
-                 html.Div([
-                    html.Img(className="logo1", src="./assets/hoopstress.jpg")
-            ])
+                html.Div([
+                    html.Img(className="logo1", src="./assets/hoopstress.jpg"),
+                    html.Img(className="logo1", src="./assets/equation.png", style={'height':'20%', 'width':'50%', 'marginLeft': '10%'})
                 
-            ],className='box', style={'padding-bottom': '15px'}),
+            ]),
+                
+            ],className='boxImage', style={'padding-bottom': '15px'}),
 
-        ], style={'width': '60%'}),
+        ], style={'width': '73%'}),
 
     ], className='row'),
+    
+    html.Div(
+        className="footer-banner row",
+        children=[
+            html.Div(
+                className="div-logo",
+                children=html.Img(
+                    className="logo", src="./assets/dash-logo.png"
+                ),
+            ),
+                        
+            # html.H2(className="title", 
+            #         children="Monte Carlo Simulation For Pipe Failure", style = title_style),
+
+            html.A(                            
+                html.Button("CODE", id="learn-more-button", style = cornflower_blue_button_style),
+                href="https://github.com/amitvkulkarni/Data-Apps/tree/main/Monte%20Carlo%20Simulation%20for%20Pipe%20Failure", target = "_blank"
+            ),
+        ],
+       
+    ),
     
 ])

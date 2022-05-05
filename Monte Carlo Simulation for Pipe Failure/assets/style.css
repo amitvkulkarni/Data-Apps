@@ -68,6 +68,15 @@ h4 {
   box-shadow: 2px 2px 8px lightgrey;
 }
 
+.boxImage {
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  margin: 10px;
+  padding: 25px;
+  box-shadow: 2px 2px 8px lightgrey;
+}
+
+
 .box_comment {
   border-radius: 20px;
   background-color: #d4f5c29a;
@@ -133,13 +142,13 @@ h4 {
 
 /* Scrollbars */
 *::-webkit-scrollbar {
-  width: 12px;               
+  width: 10px;               
 }
 *::-webkit-scrollbar-track {
   background: #EDEFEB;        
 }
 *::-webkit-scrollbar-thumb {
-  background-color:#ebb36abf;    
+  background-color:#63615fbf;    
   border-radius: 5px;      
   border: 3px solid #EDEFEB;  
 }
@@ -147,15 +156,24 @@ h4 {
 .study-browser-banner {
   background: rgb(2,21,70);
   color: white;
-  padding: 12px;
+  padding: 1px;
   padding-left: 2px;
-  text-align: center;
+  /* text-align: center; */
+}
+
+.footer-banner {
+  background: hwb(240 82% 17%);
+  color: white;
+  padding: 1px;
+  padding-left: 2px;
+  /* height: 15px; */
+  /* text-align: center; */
 }
 
 .div-logo{
   display: inline-block;
   float: right;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .logo{
@@ -169,3 +187,4 @@ h4 {
   padding: 6px;
   margin-top: 3px;
 }
+

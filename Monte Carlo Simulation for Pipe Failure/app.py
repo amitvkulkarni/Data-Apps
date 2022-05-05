@@ -15,7 +15,7 @@ import pre_processing as pp
 import dash_daq as daq
 
 
-app = dash.Dash(__name__,)
+app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 server = app.server
 
