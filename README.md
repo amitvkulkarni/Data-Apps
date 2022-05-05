@@ -11,5 +11,8 @@
 ## Shiny App Los Angeles Crash Analysis:</br></br>
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/main/Shiny%20App%20Los%20Angeles%20Crash%20Analysis/App%20Preview.gif)
 
+## Monte Carlo Simulation for Pipe Failure:</br>
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/main/Monte%20Carlo%20Simulation%20for%20Pipe%20Failure/assets/home.png)
+
 ## Classification Model Simulator:</br>
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/main/Classification%20Model%20Simulator%20with%20Plotly-Dash/home.png)
