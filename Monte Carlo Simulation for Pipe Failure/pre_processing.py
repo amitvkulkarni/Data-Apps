@@ -173,9 +173,9 @@ def simulate_values(mu, sigma, iterations, print_output=True):
 
 def plot_linechart(runs, sim_res):
     try:
-        print("---------------------------------------Initiating Simulation plot ---------------------------------------")
+        # print("---------------------------------------Initiating Simulation plot ---------------------------------------")
         y_mean = np.mean(sim_res)
-        print(f'y_mean:{y_mean}')
+        # print(f'y_mean:{y_mean}')
         df_res = pd.DataFrame(zip(runs, sim_res), columns=['runs', 'sim_res'])
         fig = px.line(df_res, x="runs", y="sim_res", title='Monte Carlo Simulation - Probability Of Pipe Failure')
         fig.add_hline(y=y_mean, line_color="red",line_dash="dash")

@@ -5,7 +5,7 @@ import dash_daq as daq
 import dash_core_components as dcc
 # from dash import dcc
 import dash_html_components as html
-# from dash import html
+# from dash import html,Input, Output, State
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 import pre_processing as pp
@@ -174,9 +174,10 @@ layout_all = html.Div([
             
             html.Div([
                 html.Div([
+                    html.Div(id='textarea-description', style={'whiteSpace': 'pre-line'}),
                     html.Img(className="logo1", src="./assets/hoopstress.jpg"),
                     html.Img(className="logo1", src="./assets/equation.png", style={'height':'20%', 'width':'50%', 'marginLeft': '10%'})
-                
+               
             ]),
                 
             ],className='boxImage', style={'padding-bottom': '15px'}),
