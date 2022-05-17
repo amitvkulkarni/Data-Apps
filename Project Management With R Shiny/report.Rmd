@@ -1,0 +1,198 @@
+---
+title: "Project Management"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    number_sections: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document: default
+  word_document:
+    toc: yes
+    toc_depth: '2'
+params:
+  n: NA
+---
+
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<!-- ```{r} -->
+<!-- library(shiny) -->
+<!-- library(shinydashboard) -->
+<!-- library(dplyr) -->
+<!-- library(leaflet) -->
+<!-- library(ggplot2) -->
+<!-- library(tidyverse) -->
+<!-- library(DT) -->
+<!-- library(plotly) -->
+<!-- library(purrr) -->
+<!-- library(glue) -->
+<!-- library(rhandsontable) -->
+<!-- library(tidyr) -->
+<!-- library(shinyalert) -->
+<!-- library(shinyjs) -->
+<!-- library(supercaliheatmapwidget) -->
+<!-- library(lubridate) -->
+<!-- library(vistime) -->
+<!-- library(timevis) -->
+<!-- library(rmarkdown) -->
+
+
+
+<!-- raw_data_tasks <- read.csv("./Data/task_tracker.csv") -->
+<!-- raw_data_projects <- read.csv("./Data/project_tracker.csv") -->
+<!-- raw_data_team <- read.csv("./Data/team_tracker.csv") -->
+<!-- raw_data_time <- read.csv("./Data/time_tracker.csv") -->
+<!-- raw_data_time$day <- dmy(raw_data_time$day) -->
+
+<!-- ``` -->
+
+
+
+
+# **project share of research area pie chart**
+
+
+  
+```{r message=FALSE, warning=FALSE}
+
+ ##---------------Home page / project share of research area pie chart------------------------------------------
+    
+df_ProjectType <- raw_data_projects %>% 
+            group_by(PROJECT.TYPE) %>% 
+            summarise("#Projects" = n())
+          
+          fig <- plot_ly(type='pie', labels=df_ProjectType$PROJECT.TYPE, values=df_ProjectType$`#Projects`, 
+                 textinfo='label+percent',insidetextorientation='radial')
+          
+          fig <- fig %>% layout(legend = list(orientation = 'h'))
+          fig
+          
+
+  
+```    
+
+# **Project status chart**  
+```{r message=FALSE, warning=FALSE}
+
+  ##---------------Home page / Project status chart--------------------------------------------------------------
+    
+      ggplot(raw_data_projects) +
+        aes(x = PROJECT.TYPE, fill = PROJECT.STATUS) +
+        geom_bar(position = "dodge") +
+        scale_fill_hue() +
+        coord_flip() +
+        theme_bw() +
+        theme(legend.position = "none") +
+        facet_wrap(vars(PROJECT.STATUS))
+        
+    
+
+```
+
+# **project complexity donut chart**
+```{r message=FALSE, warning=FALSE}
+
+    ##---------------Home page / project complexity donut chart-------------------------------------------------  
+  p1 <- raw_data_projects %>%
+            group_by(COMPLEXITY) %>%
+            summarise("Projects" = n())
+          
+          fig <- p1 %>% plot_ly(labels = ~COMPLEXITY, values = ~Projects)
+          fig <- fig %>% add_pie(hole = 0.6)
+          fig <- fig %>% layout(showlegend = T,xaxis = list(showgrid = T),yaxis = list(showgrid = T))
+          fig  
+
+```
+
+# **Overview of projects**
+```{r message=FALSE, warning=FALSE}
+
+  ##---------------Home page / Overview of projects------------------------------------------------- 
+  
+    df_tmp_projects <-raw_data_projects
+    
+    df_tmp_projects[,-1]
+      
+
+```
+# **List of upcoming tasks for delivery**
+
+```{r message=FALSE, warning=FALSE}
+
+df_tmp_upcoming <- raw_data_tasks
+  
+    df_tmp_upcoming$END.DATE <- dmy(df_tmp_upcoming$END.DATE)
+    df_tmp_upcoming$START.DATE <- dmy(df_tmp_upcoming$START.DATE)
+      
+    df_tmp_upcoming <- df_tmp_upcoming%>% 
+                          filter((as.Date(END.DATE) > today()) & (STATUS != "Completed"))
+    
+    
+    df_tmp_upcoming[,c("PROJECT.NAME", "TASK.NAME", "START.DATE","END.DATE", "STATUS")]
+
+```
+
+
+# **List of overdew tasks**
+```{r message=FALSE, warning=FALSE}
+
+df_tmp_overdue <- raw_data_tasks
+    df_tmp_overdue$END.DATE <- dmy(df_tmp_overdue$END.DATE)
+    df_tmp_overdue$START.DATE <- dmy(df_tmp_overdue$START.DATE)
+    
+    df_tmp_overdue <- df_tmp_overdue %>% 
+                        filter(as.Date(END.DATE) < today() & STATUS != "Completed")
+      
+    
+    df_tmp_overdue[,c("PROJECT.NAME", "TASK.NAME", "START.DATE","END.DATE", "STATUS")  ]
+              
+
+
+```
+
+# **Status of audit for each of the projects**
+
+
+```{r message=FALSE, warning=FALSE}
+
+p1 <- raw_data_projects %>%
+        group_by(AUDIT) %>%
+        summarise("count" = n())
+
+      fig <- p1 %>% plot_ly(labels = ~AUDIT, values = ~count)
+      fig <- fig %>% add_pie(hole = 0.6)
+      fig <- fig %>% layout(showlegend = T,xaxis = list(showgrid = T),yaxis = list(showgrid = T))
+      fig
+
+```
+
+# **List of all the tasks for each of the projects**
+
+```{r message=FALSE, warning=FALSE}
+
+
+df_proj_task <- raw_data_tasks %>%
+      group_by(PROJECT.NAME, TASK.NAME) %>%
+      summarise("cnt" = n()) %>%
+      arrange(desc(cnt))
+
+
+    ggplot(df_proj_task) +
+      aes(x = PROJECT.NAME) +
+      geom_bar(fill = "#6baed6") +
+      labs(y = "Number of Tasks") +
+      coord_flip() +
+      theme_bw()
+
+```
+
