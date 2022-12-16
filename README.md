@@ -1,9 +1,9 @@
 ## Customer Loyalty Program App:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/0a53fc7180efe3045cdfb74861b76d85857ff96a/Customer%20Loyalty%20Program/Images/Home1.PNG)
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/0a53fc7180efe3045cdfb74861b76d85857ff96a/Customer%20Loyalty%20Program/Images/Home2.PNG)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/254187b7d141518d6e7921c6fa5ce980d0f613e7/Customer%20Loyalty%20Program/Images/Home1.PNG)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/254187b7d141518d6e7921c6fa5ce980d0f613e7/Customer%20Loyalty%20Program/Images/Home2.PNG)
 
 ## Python App to Measure Customer Lifetime Value (CLV)
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6e964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png)
 
 ## Product Price Optimization App build with Python & Dash:</br>
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/75accd84f0a89fadfb42cc62484a78d68c51ed6d/Price%20Optimization/Home.png)
