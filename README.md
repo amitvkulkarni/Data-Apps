@@ -1,6 +1,6 @@
 ## Customer Loyalty Program App:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/254187b7d141518d6e7921c6fa5ce980d0f613e7/Customer%20Loyalty%20Program/Images/Home1.PNG)
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/254187b7d141518d6e7921c6fa5ce980d0f613e7/Customer%20Loyalty%20Program/Images/Home2.PNG)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/2437b0c2a49ccad29af4db634846238d480ea1f1/Customer%20Loyalty%20Program/Images/Home1.PNG)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/2437b0c2a49ccad29af4db634846238d480ea1f1/Customer%20Loyalty%20Program/Images/Home2.PNG)
 
 ## Python App to Measure Customer Lifetime Value (CLV)
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png)
