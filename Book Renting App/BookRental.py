@@ -1,32 +1,36 @@
 import datetime
 import sys
 
-def logged(function):
-        def wrapper(*args, **kwargs):
-            value = function(*args, **kwargs)
-            with open('logfile.txt', '+a') as f:
-                fname = function.__name__
-                # print(f'{fname} returned value {value}')
-                f.write(f'{fname} returned value {value}\n')
-            return value
-        return wrapper
+# def logged(function):
+#         def wrapper(*args, **kwargs):
+#             value = function(*args, **kwargs)
+#             with open('logfile.txt', '+a') as f:
+#                 fname = function.__name__
+#                 # print(f'{fname} returned value {value}')
+#                 f.write(f'{fname} returned value {value}\n')
+#             return value
+#         return wrapper
 
 class BookRental:
     
-    def __init__(self, stock = 0):
+    def __init__(self, stock:int = 0):
         self.__stock = stock
     
     @property
-    def stock(self):
-        """The stock value is readonly
+    def stock(self) -> int:
+        """The stock is a property with default value set to zero
+
+        Args:
+            stock: Number of books in stock. The default value is zero
+            
 
         Returns:
-            int: Returns the book stock
+            Number of books currently in stock
         """
         return self.__stock  
     
     @stock.setter
-    def stock(self, val):
+    def stock(self, val: int) -> int:
         """_summary_
 
         Args:
@@ -34,7 +38,7 @@ class BookRental:
         """
         self.__stock = val
     
-    @logged
+    # @logged
     def display_books_stock(self):
         """A method to display the books in stock
 
@@ -44,12 +48,12 @@ class BookRental:
         print(f'There are {self.stock} books available for rent')
         return self.stock
     
-    @logged
+    #@logged
     def rent_books(self, n: int):
-        """_summary_
+        """ Specify the number of books to rent
 
         Args:
-            n (int): Number books to be rented
+            param1 n (int): Specify the number of books to rent
 
         Returns:
             int: Returns the updated book stock
@@ -69,15 +73,15 @@ class BookRental:
             # return now
             return self.stock
             
-    @logged
-    def return_books(self,n):
-        """_summary_
+    # @logged
+    def return_books(self,n: int) -> int:
+        """ Update the current stock and return the updated stock.
 
         Args:
-            n (_type_): _description_
+            n (int): Number of books to return
 
         Returns:
-            int: Returns the updated book stock
+            stock (int): Returns the updated book stock
         """
         self.stock += n
         print(f'You have successfully returned {n} books')
@@ -94,10 +98,10 @@ class Customer:
     
     @property
     def books(self):
-        """_summary_
+        """ A property
 
         Returns:
-            _type_: _description_
+            int: returns the number of books
         """
         return self.__books
     
@@ -114,12 +118,12 @@ class Customer:
             print("Enter valid input")
             
                     
-    @logged    
+    # @logged    
     def request_books(self):
-        """_summary_
+        """ A method to request books
 
         Returns:
-            _type_: _description_
+            int : Returns the number of books requested
         """
         
         books = input("How many books do you wish to rent?: ")
@@ -133,9 +137,9 @@ class Customer:
             self.books = books
             return self.books
     
-    @logged
+    # @logged
     def return_books(self):
-        """_summary_
+        """ A method to return the books
 
         Returns:
             int: Number of books to return
