@@ -5,7 +5,7 @@ Customer Lifetime Value is the profit that a business will make from a specific 
 ## [Read more on my blog](https://www.analyticsvidhya.com/blog/2021/08/create-a-python-app-to-measure-customer-lifetime-value-clv/?)
 
 ## Here is the preview of the app:</br>
-![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/c48a6e964033d92d1e7f31adf80bb08869c446af/Customer%20Lifetime%20Value/Home.png)
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/59fede555a08a4ca6c8376f1a3fc056f7d7813b1/Customer%20Lifetime%20Value/Home.png)
 
 
 
