@@ -11,6 +11,6 @@ The objective of the app is to enable value at risk(VaR) risk assessment of the 
 * **Step 4**: Navigate to the browser and type the localhost URL. The app will be loaded as shown below and click on the CREATE button
 
 
-## [Read more on this on my blog](https://amitvkulkarni.medium.com/automate-and-standardize-testing-with-tox-in-python-6e4ea54a48ec)
+## [Read more on this on my blog](https://amitvkulkarni.medium.com/build-a-personalized-var-simulator-app-using-python-476e95774554)
 
 
