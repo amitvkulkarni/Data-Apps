@@ -1,3 +1,7 @@
+
+## Build A Personalized VaR Simulator App Using Python:</br>
+![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/1c78a4f77e0d690ec505423cd4d4d09d29f82bb3/Portfolio%20Simulator%20Using%20Python/Preview.gif)
+
 ## Customer Loyalty Program App:</br>
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/2437b0c2a49ccad29af4db634846238d480ea1f1/Customer%20Loyalty%20Program/Images/Home1.PNG)
 ![alt text](https://github.com/amitvkulkarni/Data-Apps/blob/2437b0c2a49ccad29af4db634846238d480ea1f1/Customer%20Loyalty%20Program/Images/Home2.PNG)
