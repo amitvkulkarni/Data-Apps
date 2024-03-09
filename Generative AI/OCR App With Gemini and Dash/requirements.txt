@@ -1,0 +1,6 @@
+Dash
+google-generativeai
+PyPDF2
+chromadb
+faiss-cpu
+Pillow
