@@ -1,0 +1,4 @@
+dash
+dash_bootstrap_components
+langchain-google-genai
+requests
