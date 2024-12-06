@@ -1,0 +1,7 @@
+dash
+dash-bootstrap-components
+langchain
+langchain-openai
+langchain-community
+openai
+pymysql
