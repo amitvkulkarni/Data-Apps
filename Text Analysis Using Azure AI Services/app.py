@@ -18,9 +18,6 @@ def authenticate_client():
 
 client = authenticate_client()
 
-
-
-# Dash app with Bootstrap theme
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY, 
                                                 "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"],
                 )
@@ -50,13 +47,20 @@ app.layout = dbc.Container([
         dbc.Col(width=3)
     ], className="my-3"),
 
+    # Language display row (added)
+    dbc.Row([
+        dbc.Col(
+            html.Div(id='detected-language', style={"fontWeight": "bold", "fontSize": 18, "textAlign": "center"}),
+            width=12
+        )
+    ]),
+
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                # dbc.CardHeader("Sentiment Analysis", style={"fontWeight": "bold"}),
                 dbc.CardHeader([
-                        html.I(className="bi bi-emoji-smile me-2 text-warning"),  # Bootstrap Icons
-                         "Sentiment Analysis"
+                        html.I(className="bi bi-emoji-smile me-2 text-warning"),
+                        "Sentiment Analysis"
                     ], style={"fontWeight": "bold"}),
                 dbc.CardBody([
                     dcc.Loading(
@@ -70,7 +74,6 @@ app.layout = dbc.Container([
 
         dbc.Col([
             dbc.Card([
-                # dbc.CardHeader("Named Entities", style={"fontWeight": "bold"}),
                 dbc.CardHeader([
                         html.I(className="bi bi-tags me-2 text-info"),
                         "Named Entities"
@@ -87,10 +90,9 @@ app.layout = dbc.Container([
 
         dbc.Col([
             dbc.Card([
-                # dbc.CardHeader("Key Phrases", style={"fontWeight": "bold"}),
                 dbc.CardHeader([
                         html.I(className="bi bi-lightbulb me-2 text-success"),
-                        "Named Entities"
+                        "Key Phrases"   # Fixed label from "Named Entities" to "Key Phrases"
                     ],style={"fontWeight": "bold"}),
                 dbc.CardBody([
                     dcc.Loading(
@@ -111,6 +113,7 @@ app.layout = dbc.Container([
         Output('entities', 'children'),
         Output('key-phrases', 'children'),
         Output('input-text', 'value'),
+        Output('detected-language', 'children')   # Added language output
     ],
     [
         Input('analyze-button', 'n_clicks'),
@@ -122,14 +125,19 @@ app.layout = dbc.Container([
 def handle_buttons(analyze_clicks, clear_clicks, text):
     ctx = dash.callback_context
     if not ctx.triggered:
-        return default_fig(), default_list(), default_list(), ""
+        return default_fig(), default_list(), default_list(), "", ""
 
     button_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if button_id == 'clear-button' or not text.strip():
-        return default_fig(), default_list(), default_list(), ""
+    if button_id == 'clear-button' or not text or not text.strip():
+        return default_fig(), default_list(), default_list(), "", ""
 
     try:
+        # Detect language
+        language_response = client.detect_language(documents=[text])[0]
+        language = f"Detected Language: {language_response.primary_language.name} ({language_response.primary_language.iso6391_name.upper()})"
+
+        # Sentiment Analysis
         sentiment_response = client.analyze_sentiment(documents=[text])[0]
         scores = sentiment_response.confidence_scores
         sentiment = sentiment_response.sentiment
@@ -147,22 +155,24 @@ def handle_buttons(analyze_clicks, clear_clicks, text):
             showlegend=True
         )
 
+        # Named Entities
         entities_response = client.recognize_entities(documents=[text])[0]
         entities_list = [html.Li(f"{entity.text} ({entity.category})") for entity in entities_response.entities]
         if not entities_list:
             entities_list = default_list()
 
+        # Key Phrases
         key_phrases_response = client.extract_key_phrases(documents=[text])[0]
         key_phrases_list = [html.Li(phrase) for phrase in key_phrases_response.key_phrases]
         if not key_phrases_list:
             key_phrases_list = default_list()
 
-        return sentiment_fig, entities_list, key_phrases_list, text
+        return sentiment_fig, entities_list, key_phrases_list, text, language
 
     except Exception as e:
         error_message = f"Error: {str(e)}"
         error_li = [html.Li(error_message)]
-        return default_fig(error_message), error_li, error_li, text
+        return default_fig(error_message), error_li, error_li, text, ""
 
 
 def default_fig(message="No text available for analysis"):
