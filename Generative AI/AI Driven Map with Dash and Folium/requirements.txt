@@ -1,0 +1,6 @@
+dash
+dash-core-components
+dash-html-components
+folium
+pandas
+google-generativeai
